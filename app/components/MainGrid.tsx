@@ -1,8 +1,8 @@
 "use client"
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, Button, Flex, SimpleGrid, useColorMode } from '@chakra-ui/react';
-import useGame from '../hooks/gameControls';
+import { Box, Button, Flex, Input, InputGroup, InputLeftAddon, SimpleGrid, } from '@chakra-ui/react';
 import useInterval from 'use-interval'
+import { HexColorPicker } from "react-colorful";
 
 interface Cell {
   alive: boolean;
@@ -13,9 +13,10 @@ const MainGrid = () => {
   const [gridFull, setGridFull] = useState<Cell[][]>([]);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [speed, setSpeed] = useState<number>(500);
-  const rows: number = 50;
+  const [cellColor, setCellColor] = useState<string>('#3f546a');
+  const [bgColor, setBgColor] = useState<string>('#d4e9e3');
+  const rows: number = 30;
   const cols: number = 50;
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     seed();
@@ -34,6 +35,7 @@ const MainGrid = () => {
 
   const playButton = () => {
     setIsPlaying(true);
+    setSpeed(500);
   };
 
   const pauseButton = () => {
@@ -41,15 +43,18 @@ const MainGrid = () => {
   };
 
   const fast = () => {
+    setIsPlaying(true);
     setSpeed(100);
   };
 
   const slow = () => {
+    setIsPlaying(true);
     setSpeed(1000);
   };
 
   const resetButton = () => {
     setGeneration(0);
+    setSpeed(500);
     seed();
   }
 
@@ -84,28 +89,42 @@ const MainGrid = () => {
       play();
     }
   }, speed);
-
   return (
-    <div>
-      <Box mb="2rem">
-        <Box
-          as="h1"
-          fontSize="30px"
-          textShadow={'8px 8px #9a9a9a'}
-          letterSpacing="3px"
-          color={'gray.800'}
-        >
-          GAME OF LIFE
-        </Box>
+    <div className='flex mr-auto flex-col justify-center items-center'>
+      <Box
+        as="h1"
+        fontSize="24px"
+        letterSpacing="3px"
+        color={'gray.800'}
+        my={5}
+      >
+        GAME OF LIFE
       </Box>
+      <Flex direction="row" >
+        <Flex direction="column" justifyContent="center" marginRight={4} gap={5}>
+          <HexColorPicker color={cellColor} onChange={setCellColor} />
+          <InputGroup>
+            <InputLeftAddon>Cell Color</InputLeftAddon>
+            <Input type='tel' placeholder='cell color' width={200} value={cellColor} onChange={(e) => setCellColor(e.target.value)} />
+          </InputGroup>
+        </Flex>
 
-      <SimpleGrid gridTemplateColumns="1fr 5fr 1fr" mb="2rem">
+        <Flex direction="column" justifyContent="center" gap={5}>
+          <HexColorPicker color={bgColor} onChange={setBgColor} />
+          <InputGroup>
+            <InputLeftAddon>BG Color</InputLeftAddon>
+            <Input type='tel' placeholder='background color' width={200} value={bgColor} onChange={(e) => setBgColor(e.target.value)} />
+          </InputGroup>
+        </Flex>
+      </Flex>
+
+      <SimpleGrid gridTemplateColumns="1fr 1fr" my="2rem" alignItems="center">
         <Flex gridGap="1rem" justifyContent="center">
-          <Button onClick={playButton}>Play</Button>
-          <Button onClick={pauseButton}>Pause</Button>
-          <Button onClick={resetButton}>Reset</Button>
-          <Button onClick={fast}>Fast</Button>
-          <Button onClick={slow}>Slow</Button>
+          <Button onClick={playButton} variant={isPlaying ? "outline" : ""} colorScheme='gray'>Play</Button>
+          <Button onClick={pauseButton} variant={!isPlaying ? "outline" : ""} colorScheme='gray'>Pause</Button>
+          <Button onClick={resetButton} colorScheme='red'>Reset</Button>
+          <Button onClick={fast} variant={speed === 100 ? "outline" : ""} colorScheme='gray'>Fast</Button>
+          <Button onClick={slow} variant={speed === 1000 ? "outline" : ""} colorScheme='gray'>Slow</Button>
         </Flex>
         <Box>Step: {generation}</Box>
       </SimpleGrid>
@@ -123,7 +142,7 @@ const MainGrid = () => {
               data-testid="cell"
               width="20px"
               height="20px"
-              backgroundColor={cell.alive ? 'black' : 'gray.300'}
+              backgroundColor={cell.alive ? cellColor : bgColor}
               cursor="pointer"
             />
           ))
