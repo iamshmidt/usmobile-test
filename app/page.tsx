@@ -17,6 +17,7 @@ export default function Home() {
       <Grid minH="100vh" p={3}>
         {/* <ColorModeSwitcher justifySelf="flex-end" /> */}
         helloDDD
+        I am here
         <VStack spacing={8}>
           <Box>
             <MainGrid />
