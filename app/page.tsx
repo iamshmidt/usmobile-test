@@ -16,7 +16,7 @@ export default function Home() {
     <Box textAlign="center" fontSize="xl">
       <Grid minH="100vh" p={3}>
         {/* <ColorModeSwitcher justifySelf="flex-end" /> */}
-        helloDDD
+   New change
         <VStack spacing={8}>
           <Box>
             <MainGrid />
