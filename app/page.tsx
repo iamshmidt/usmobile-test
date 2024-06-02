@@ -18,6 +18,7 @@ export default function Home() {
         {/* <ColorModeSwitcher justifySelf="flex-end" /> */}
         New change
         new changes 2
+        hello
         <VStack spacing={8}>
           <Box>
             <MainGrid />
