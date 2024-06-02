@@ -19,6 +19,7 @@ export default function Home() {
         New change
         new changes 2
         I am here
+        hello
         <VStack spacing={8}>
           <Box>
             <MainGrid />
